@@ -1,0 +1,40 @@
+# Django
+django
+django-cors-headers
+django-environ
+
+gunicorn
+
+# API
+django-ninja
+pydantic
+
+# Database
+psycopg2-binary
+django-redis
+
+# Auth
+PyJWT
+django-ninja-jwt
+
+# Crypto payments
+web3
+python-bitcoinlib
+bitcoinlib
+
+# Image handling
+Pillow
+django-storages
+
+# Task queue
+celery
+redis
+
+# Utils
+python-slugify
+httpx
+qrcode
+
+# Development
+ipython
+django-extensions

@@ -1,0 +1,60 @@
+# --- Python compilados ---
+**/__pycache__/
+*.py[cod]
+*.pyd
+
+# --- Entornos virtuales ---
+.venv/
+venv/
+env/
+.Python
+
+# --- Secretos / env files ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- Logs y temporales ---
+*.log
+logs/
+tmp/
+*.pid
+celerybeat-schedule
+
+# --- Control de versiones ---
+.git
+
+# --- Caches varias ---
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- Node / frontend ---
+node_modules/
+
+# --- Artefactos Django ---
+media/
+staticfiles/
+*.sqlite3
+# Si haces collectstatic en build y quieres que entre, quita "staticfiles/"
+
+# --- Packaging / dist ---
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# --- Cobertura / testing ---
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
