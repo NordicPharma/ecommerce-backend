@@ -4,12 +4,14 @@ x-app-environment: &app_environment
   DB_NAME: ${DB_NAME}
   DB_USER: ${DB_USER}
   DB_PASSWORD: ${DB_PASSWORD}
-  DB_HOST: db                 
+  DB_HOST: db
   DB_PORT: 5432
   REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
 
 services:
   db:
+    env_file:
+      - .env
     image: postgres:14-alpine
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -23,8 +25,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     # Quita esto si no necesitas acceder desde tu host:
-    # ports:
-    #   - "5433:5432"
+    ports:
+      - "5433:5432"
 
   redis:
     image: redis:7-alpine
@@ -33,17 +35,44 @@ services:
     #   - "6379:6379"
 
   app:
-    build: .
+    # build: .
+    image: suplements-store
     ports:
       - "8000:8000"
     env_file:
       - .env                    # SECRET_KEY, DEBUG, etc.
+    volumes:
+      - ./:/app
     environment:
       <<: *app_environment      # Fuerza el DB_HOST=db y DB_PORT=5432
     depends_on:
       db:
         condition: service_healthy
     # No pongas command si ya lo defines en el Dockerfile con gunicorn
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./infra/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./infra/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./infra/grafana/dashboards/:/var/lib/grafana/dashboards/
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infra/prom/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
 
 volumes:
   postgres_data:

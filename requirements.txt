@@ -38,3 +38,4 @@ qrcode
 # Development
 ipython
 django-extensions
+django_prometheus

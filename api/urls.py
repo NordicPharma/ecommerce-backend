@@ -3,13 +3,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from ninja import NinjaAPI
-from ninja_extra import NinjaExtraAPI 
+from ninja_extra import NinjaExtraAPI
 from ninja_jwt.controller import NinjaJWTDefaultController
-
+from django.urls import include
 from apps.products.api import router as products_router
 from apps.orders.api import router as orders_router
 from apps.payments.api import router as payments_router
 from apps.users.api import router as users_router
+
 
 # Crear API principal
 api = NinjaExtraAPI(
@@ -30,6 +31,7 @@ api.add_router("/users/", users_router)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api.urls),
+    path('', include('django_prometheus.urls')),
 ]
 
 if settings.DEBUG:
